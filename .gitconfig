@@ -1,0 +1,15 @@
+[user]
+	name = Juan Manuel Lomonaco
+	email = jlomonaco@integratech.com.ar
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+[alias]
+	st = status
+	ci = commit
+	apply-stash-to-dirty-working-tree = !git stash show -p | git apply && git stash drop
+	tree = log --graph --decorate --pretty=oneline --abbrev-commit
+	co = checkout
+	log1 = log --pretty=oneline --abbrev-commit
