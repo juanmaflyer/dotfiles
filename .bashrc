@@ -13,7 +13,7 @@ HISTCONTROL=ignoredups:ignorespace
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=5000
+HISTSIZE=8000
 HISTFILESIZE=10000
 
 # check the window size after each command and, if necessary,
@@ -93,6 +93,7 @@ alias a2reload='sudo /etc/init.d/apache2 reload'
 
 alias upseconds="uptime | awk '"'{ split($3,arr,":"); print (arr[1]*60+arr[2])*60 }'"'"
 
+alias uports='sudo netstat -tulpan'
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -113,6 +114,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 export PATH=$PATH:/var/lib/gems/1.8/bin
-export CDPATH=~/:~/projects
+export CDPATH=./:~/:~/projects
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;32m\]\u\[\033[1;38;5;235m\]->\[\033[1;38;5;130m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
 #export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;38;5;56m\]\[\033[48;5;220m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
