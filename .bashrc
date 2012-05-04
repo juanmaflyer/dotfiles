@@ -20,6 +20,9 @@ HISTFILESIZE=10000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# deshabilitar el ctrl-d para no cerrar la sesion
+set -o ignoreeof
+
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -116,4 +119,5 @@ fi
 export PATH=$PATH:/var/lib/gems/1.8/bin
 export CDPATH=./:~/:~/projects
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;32m\]\u\[\033[1;38;5;235m\]->\[\033[1;38;5;130m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
+export EDITOR='/usr/bin/vim'
 #export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;38;5;56m\]\[\033[48;5;220m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
