@@ -94,9 +94,12 @@ alias _sis='cd /home/juanma/projects/sis/'
 alias a2restart='sudo /etc/init.d/apache2 restart'
 alias a2reload='sudo /etc/init.d/apache2 reload'
 
+# FIXME: medio chotito, no funciona cuando la pc esta prendida hace menos de una hora!
 alias upseconds="uptime | awk '"'{ split($3,arr,":"); print (arr[1]*60+arr[2])*60 }'"'"
 
+# muestra puertos abiertos.
 alias uports='sudo netstat -tulpan'
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
