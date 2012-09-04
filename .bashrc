@@ -117,7 +117,9 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 export PATH=$PATH:/var/lib/gems/1.8/bin
-export CDPATH=./:~/:~/projects
-export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;32m\]\u\[\033[1;38;5;235m\]->\[\033[1;38;5;130m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
+#el CDPATH es conveniente no exportarlo, porque si corro scripts desde un SHELL con CDPATH exportado
+#los cd que ejecute el script me podrian llevar a lugares no esperados.
+CDPATH=./:~/:~/projects
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;32m\]\u\[\033[1;38;5;235m\]@\[\033[1;38;5;130m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
 export EDITOR='/usr/bin/vim'
 #export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;38;5;56m\]\[\033[48;5;220m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
