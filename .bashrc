@@ -3,11 +3,14 @@
 # for examples
 
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+case $- in
+    *i*) ;;
+      *) return;;
+esac
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoredups:ignorespace
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -23,17 +26,21 @@ shopt -s checkwinsize
 # deshabilitar el ctrl-d para no cerrar la sesion
 set -o ignoreeof
 
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -80,25 +87,13 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-
-alias _oym='cd /home/juanma/projects/spec/oym/'
-alias _updatedb='cd /home/juanma/projects/spec/updatedb/'
-alias _spec='cd /home/juanma/projects/spec/spec'
-alias _elcom='cd /home/juanma/projects/elcom/ielcom-web/'
-alias _sis='cd /home/juanma/projects/sis/'
-
-alias a2restart='sudo /etc/init.d/apache2 restart'
-alias a2reload='sudo /etc/init.d/apache2 reload'
-
-# FIXME: medio chotito, no funciona cuando la pc esta prendida hace menos de una hora!
-alias upseconds="uptime | awk '"'{ split($3,arr,":"); print (arr[1]*60+arr[2])*60 }'"'"
-
-# muestra puertos abiertos.
-alias uports='sudo netstat -tulpan'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -116,13 +111,42 @@ fi
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
+  fi
 fi
-export PATH=$PATH:/var/lib/gems/1.8/bin
-#el CDPATH es conveniente no exportarlo, porque si corro scripts desde un SHELL con CDPATH exportado
-#los cd que ejecute el script me podrian llevar a lugares no esperados.
+
+# muestra puertos abiertos.
+alias uports='sudo netstat -tulpan'
+
+# nvm config
+export NVM_DIR="/home/juanma/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# rbenv config
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+# handle ssh-agent and ssh-add
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  eval `ssh-agent`
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l | grep "The agent has no identities" && ssh-add
+
+# El CDPATH es conveniente no exportarlo, porque si corro scripts desde un SHELL con CDPATH exportado
+# los cd que ejecute el script me podrian llevar a lugares no esperados.
 CDPATH=./:~/:~/projects
-export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;32m\]\u\[\033[1;38;5;235m\]@\[\033[1;38;5;130m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
+
+# usar VIM como editor default
 export EDITOR='/usr/bin/vim'
-#export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;38;5;56m\]\[\033[48;5;220m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
+
+# prompt
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[1;32m\]\u\[\033[1;38;5;235m\]@\[\033[1;38;5;130m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1 "[%s]")\[\033[00m\]$ '
+
+# mysql prompt
+export MYSQL_PS1="\u@\h [\d]> "
