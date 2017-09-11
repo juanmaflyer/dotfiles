@@ -14,3 +14,4 @@
 	tree = log --graph --decorate --pretty=oneline --abbrev-commit
 	co = checkout
 	log1 = log --pretty=oneline --abbrev-commit
+	diffc = diff --cached
